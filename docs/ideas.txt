@@ -1,0 +1,13 @@
+1. Holiday Planning (Multi-level flights, Weather Checking?)
+2. Economy game (Buying and selling tickets) (Make use of real money to build empires)
+3. Yearly statistics to work out prices throughout the year
+4. Gambling game (Price guessing game)
+5. Strategy Game (Prices can be used for distance) (Value of the city and cost of hotels can be used for distance too)
+6. Make the trip planning a game (Get other people to rate it)
+7. Flight game with limitations (Around the world with £80) (Combine with 6?)
+8. Event Plannning (Marraiges) Graphical Demonstration of prices and comparisions with arrivals
+9. Learning software (Using SkyScanner APIs)
+10. Recommend language learning websites
+11. Suggested destinations given input
+12. Searches from events
+13. Make queries through Twitter (combine with 3 and 7?) (Use trending to work out where to go)
