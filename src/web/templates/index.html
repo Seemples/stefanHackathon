@@ -1,0 +1,29 @@
+<!doctype html>
+<head>
+
+	<meta charset="utf-8">
+	<title>Title</title>
+	<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans+Condensed:300|Open+Sans:400,300">
+	<link rel="stylesheet" href="{{ url_for('static', filename='css/normalize.css') }}">
+	<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+</head>
+<body>	
+
+	<div id="sug" class="sug-container">
+		<input id="input" class="sug-country" type="text" placeholder="Outbound city">
+		<div id="chose" class="button-submit">Select</div>
+		<ul id="list" class="sug-list-container"></ul>
+	</div>
+
+	<div id="datepick" class="datepicker-container">
+		<input id="date" class="datepicker datepicker-date" type="text" maxlength="2">
+		<input id="month" class="datepicker datepicker-month" type="text" maxlength="2">
+		<input id="year" class="datepicker datepicker-year" type="text" maxlength="4">
+	</div>
+
+	<script src="{{ url_for('static', filename='js/vendor/jquery-1.10.2.min.js') }}"></script>
+	<script src="{{ url_for('static', filename='js/app.js') }}"></script>
+
+</body>
+</html>
