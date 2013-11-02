@@ -8,18 +8,36 @@
 	<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 
 </head>
-<body>	
+<body>
 
-	<div id="sug" class="sug-container">
-		<input id="input" class="sug-country" type="text" placeholder="Outbound city" autofocus>
-		<div id="chose" class="button-submit">Select</div>
-		<ul id="list" class="sug-list-container"></ul>
+	<div class="left">
+
+		<div id="budget-pick" class="form-container">
+			<input id="budget" class="input budgetpicker" type="text" maxlength="4" placeholder="Your budget" autofocus>
+		</div>
+
+		<div id="date-pick" class="form-container">
+			<input id="date" class="input datepicker datepicker-date" type="text" maxlength="2">
+			<input id="month" class="input datepicker datepicker-month" type="text" maxlength="2">
+			<input id="year" class="input datepicker datepicker-year" type="text" maxlength="4">
+		</div>
+
+		<div id="sug" class="form-container">
+			<input id="input" class="input sug-country" type="text" placeholder="Outbound city">
+			<div id="select" class="button-submit">Select</div>
+			<ul id="list" class="sug-list-container"></ul>
+		</div>
+
 	</div>
 
-	<div id="datepick" class="datepicker-container">
-		<input id="date" class="datepicker datepicker-date" type="text" maxlength="2">
-		<input id="month" class="datepicker datepicker-month" type="text" maxlength="2">
-		<input id="year" class="datepicker datepicker-year" type="text" maxlength="4">
+	<div class="right">
+
+		<h2>We are going with brief description of our doings!</h2>
+		<p>Just start to interact with te whichever way you prefer!</p>
+		<p>Just start to  with tver way you prefer!</p>
+		<p>Just sou prefer!</p>
+		<p>Just start to interact with the site whichever way you prefer!</p>
+		<p>Just start h the site whichever way you prefer!</p>
 	</div>
 
 	<script src="{{ url_for('static', filename='js/vendor/jquery-1.10.2.min.js') }}"></script>

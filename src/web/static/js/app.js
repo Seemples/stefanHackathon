@@ -1,74 +1,134 @@
 (function () {
 
+	// Cache the document jQuery object.
 	var $document = $(document);
 
-	var timer;	
+	// Timer for preventing AJAX Spam.
+	var timer;
+
+
 	var $list = $('#list');
 	var $suggestions;
-	var sugLength = 0;
 	var sugActive = -1;
 
 	var $input = $('#input');
 	var country = '';
 
-	var $date = $('#date');
-	var $month = $('#month');
-	var $year = $('#year');
-	var date;
-	var month;
-	var year;
+	// Clear the list.
+	function clearList() {
+		$list.html('');
+		$suggestions = [];
+		sugActive = -1;
+	}
 
-	var today = new Date();
-	var dd = today.getDate();
-	var mm = today.getMonth() + 1; //January is 0!
-	var yyyy = today.getFullYear();
+	// Complete the input using the autocomplete.
+	function complete(n) {
+		$suggestions.removeClass('active');
 
-	$date.val(dd);
-	$month.val(mm);
-	$year.val(yyyy);
+		var $suggestion = $suggestions.eq(sugActive = n);
+		$suggestion.addClass('active');
+		$input.val($suggestion.html());
+
+		country = $suggestion.data('placeid');
+	}
+
+	// Autocomplete suggestions.
+	function suggest(country) {
+		$.getJSON('/api/country', {c: country }, function (data) {
+
+			clearList();
+
+			var sug = data.result;
+			var sugLength = sug.length;
+			if (sugLength > 8) sugLength = 8;
+
+			for (var i = 0; i < sugLength; i++) {
+				
+				var placeName = sug[i].PlaceName;
+				var placeId = sug[i].PlaceId.replace('-sky', '');
+				
+				$list.append('<li class="sug-list-item" data-placeid="' + placeId + '">' + placeName + ', ' + placeId + '</li>');			
+			}
+
+			/** Attach new events */
+
+			$suggestions = $list.find('li');
+
+			$suggestions.on('click', function () {
+				var $self = $(this);
+				complete($self.index());
+				clearList();
+			});
+		
+		});
+	}
 
 	// Autosuggestions select.
 	$document.keydown(function (e) {
 
 		if ($input.is(':focus')) {
-			// Checking for dufferent keys.			
-			if (e.keyCode == 40 && (sugActive + 1) < sugLength) {
-				
-				$suggestions.removeClass('active');
-		    	sugActive++;
-		    	$suggestions.eq(sugActive).addClass('active');
-
+		
+			if (e.keyCode == 40 && (sugActive + 1) < $suggestions.length) {				
+		    	complete(sugActive + 1);
 	    	} else if (e.keyCode == 38 && sugActive) {
-
-		    	$suggestions.removeClass('active');
-		    	sugActive--;
-		    	$suggestions.eq(sugActive).addClass('active');	    	
-		    
-		    } else if (e.keyCode == 13 ) {
-	    	
-	    		if (sugActive > -1) {
-		    		console.log($suggestions.eq(sugActive).data('placeid') + ' ');
-		    	}
-
+		    	complete(sugActive - 1);		    
+		    } else if (e.keyCode == 13) {
+		    	if (sugActive > -1) clearList();
 		    	return false;
-
 		    } // if (e.keyCode)
+
 		} // if ($input.is)
 
 	}); // $docuemnt.keydown()
 
-
-	// On changing values.
+	// On input blur.
 	$input.on('input', function () {
-
-		if (country = $input.val().trim()) {
+		if ($input.val().trim()) {
 			clearTimeout(timer);
-			timer = setTimeout(suggest(country), 400);
-		} else {
-			$list.html('');
-		}
-
+			timer = setTimeout(suggest($input.val().trim()), 600);
+		} else clearList();
 	});
+
+	/*$('#select').on('click', function () {
+		country = $suggestions.eq(sugActive).data('placeid');
+		console.log(country);
+	});*/
+
+
+
+	//////////////////////////////////////////////////////
+	//                   DATES                          //
+	//////////////////////////////////////////////////////
+
+	var date;
+	var month;
+	var year;
+
+	var $date = $('#date');
+	var $month = $('#month');
+	var $year = $('#year');
+
+	var today = new Date();
+	$date.val(today.getDate());
+	$month.val(today.getMonth() + 1);
+	$year.val(today.getFullYear());
+
+
+	$('#year').on('input', function () {
+
+		var $self = $(this);
+		year = $self.val();
+
+		if (year > 2014) {			
+			year = 2014;
+			$self.val(year);
+		} else if (year < 2013) {
+			year = 2013;
+			$self.val(year);			
+		}
+	});
+
+
 
 	// Datepicker.
 
@@ -99,53 +159,6 @@
 			$self.val(month);			
 		}
 	});
-
-	$('#year').on('input', function () {
-
-		var $self = $(this);
-		year = $self.val();
-
-		if (year > 2014) {			
-			year = 2014;
-			$self.val(year);
-		} else if (year < 2013) {
-			year = 2013;
-			$self.val(year);			
-		}
-	});
-
-	function suggest(country) {
-		$.getJSON('/api/country', {c: country }, function (data) {
-
-			$list.html('');
-
-			var sug = data.result;
-			sugLength = sug.length;
-			if (sugLength > 8) sugLength = 8;
-
-			var c = data.c;			
-			var i = 0;
-
-			for (i; i < sugLength; i++) {
-				var placeName = sug[i].PlaceName;
-				var placeId = sug[i].PlaceId.replace('-sky', '');
-				
-				$list.append('<li class="sug-list-item" data-placeid="' + placeId + '">' + placeName + ', ' + placeId + '</li>');			
-			}
-
-			/** Attach new events */
-
-			$suggestions = $list.find('li');
-
-			$suggestions.on('click', function () {
-				$suggestions.removeClass('active');
-				var $self = $(this);
-				$self.addClass('active');
-				sugActive = $self.index();
-			});
-		
-		});
-	}
 
 
 })($);
