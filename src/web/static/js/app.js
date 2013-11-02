@@ -182,15 +182,12 @@
 		if (date && date < 10) date = '0' + date;
 		if (month && month < 10) month = '0' + month;
 
-		if (!year || !budget || !country) {
+		if (!year || !month || !date || !budget || !country) {
 			alert('All fiels should be filled.');
 			return;
 		}
 
-		if (month) {
-			year += '-' + month;
-			if (date) year += '-' + date;
-		}
+		year += '-' + month + '-' + date;
 
 		console.log(year);
 
