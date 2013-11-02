@@ -1,0 +1,32 @@
+
+	livePricing(dep, arr, date)
+
+###takes values:
+
+dep	departure airport, 3-letter String ex. "GLA"
+arr	arrival airport, 3-letter String or "anywhere
+date	string YYYY-MM-DD
+
+###returns dict with items:
+
+'Arrival'	:date
+'Departure'	:date
+'Price'		:float 
+'Carrier'	:string
+'AgentName'	:string
+'AgentLogo'	:string URL to the png file
+
+
+	
+	browse(dep,arr,date1,date2)
+
+###takes same values as above
+
+###returns json dict with items:
+
+'Carriers'	:list of dicts with "CarrierId" and "Name"
+'Currencies'	:list with dict with shit
+'Places'	:list of dicts with "IataCode", "Name", "PlaceId", "Type"
+'Quotes'	:list of dicts with "Direct", "MinPrice", "QuoteId",
+			and "OutboundLeg", which holds: "CarrierIds",
+			"DepartureDate", "DestinationId", "OriginId"
