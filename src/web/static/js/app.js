@@ -6,10 +6,11 @@
 	// Timer for preventing AJAX Spam.
 	var timer;
 
-
+	// Caching the suggestion variables.
 	var $list = $('#list');
 	var $suggestions;
 	var sugActive = -1;
+
 
 	var $input = $('#input');
 	var country = '';
@@ -100,10 +101,6 @@
 	//                   DATES                          //
 	//////////////////////////////////////////////////////
 
-	var date;
-	var month;
-	var year;
-
 	var $date = $('#date');
 	var $month = $('#month');
 	var $year = $('#year');
@@ -114,50 +111,47 @@
 	$year.val(today.getFullYear());
 
 
-	$('#year').on('input', function () {
+	$year.on('blur', function () {
+		var $self = $(this);		
+		value = $self.val();
 
-		var $self = $(this);
-		year = $self.val();
+		if (value > 2014) value = 2014;
+		else if (value < 2013) value = 2013;
+		$self.val(value);
+	});
 
-		if (year > 2014) {			
-			year = 2014;
-			$self.val(year);
-		} else if (year < 2013) {
-			year = 2013;
-			$self.val(year);			
-		}
+	$date.on('blur', function () {
+		var $self = $(this);		
+		value = $self.val();
+
+		if (value > 31) value = 31;
+		else if (value < 1) value = 1;
+		$self.val(value);
+	});
+
+	$month.on('blur', function () {
+		var $self = $(this);		
+		value = $self.val();
+
+		if (value > 12) value = 12;
+		else if (value < 1) value = 1;
+		$self.val(value);
 	});
 
 
+	//////////////////////////////////////////////////////
+	//                   BUDGET                         //
+	//////////////////////////////////////////////////////
 
-	// Datepicker.
+	var $budget = $('#budget');
 
-	$('#date').on('input', function () {
+	$budget.on('blur', function () {
+		var $self = $(this);		
+		value = $self.val();
 
-		var $self = $(this);
-		date = $self.val();
-
-		if (date > 31) {			
-			date = 31;
-			$self.val(date);
-		} else if (date < 0) {
-			date = 1;
-			$self.val(date);
-		}
-	});
-
-	$('#month').on('input', function () {
-
-		var $self = $(this);
-		month = $self.val();
-
-		if (month > 12) {			
-			month = 12;
-			$self.val(month);
-		} else if (month < 0) {
-			month = 1;
-			$self.val(month);			
-		}
+		if (value > 50000) value = 50000;
+		else if (value < 50) value = 50;
+		$self.val(value);
 	});
 
 
