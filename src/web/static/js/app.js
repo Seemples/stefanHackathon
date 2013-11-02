@@ -1,5 +1,9 @@
 (function () {
 
+	function isInt(n) {
+		return n % 1 === 0;
+	}
+
 	// Cache the document jQuery object.
 	var $document = $(document);
 
@@ -125,7 +129,7 @@
 		value = $self.val();
 
 		if (value > 31) value = 31;
-		else if (value < 1) value = 1;
+		else if (value < 0) value = 1;
 		$self.val(value);
 	});
 
@@ -134,7 +138,7 @@
 		value = $self.val();
 
 		if (value > 12) value = 12;
-		else if (value < 1) value = 1;
+		else if (value < 0) value = 1;
 		$self.val(value);
 	});
 
@@ -154,5 +158,42 @@
 		$self.val(value);
 	});
 
+
+	//////////////////////////////////////////////////////
+	//                   SUBMIT                         //
+	//////////////////////////////////////////////////////
+
+	var $submit = $('#submit');
+
+	$submit.click(function () {
+
+
+		var budget = $budget.val().trim();
+
+		var date = $date.val().trim();
+		var month = $month.val().trim();
+		var year = $year.val().trim();
+
+		if (!isInt(budget) || !isInt(date) || !isInt(month) || !isInt(year)) {
+			alert('Incorrect values entered!');
+			return;
+		}
+
+		if (date && date < 10) date = '0' + date;
+		if (month && month < 10) month = '0' + month;
+
+		if (!year || !budget || !country) {
+			alert('All fiels should be filled.');
+			return;
+		}
+
+		if (month) {
+			year += '-' + month;
+			if (date) year += '-' + date;
+		}
+
+		console.log(year);
+
+	});
 
 })($);
