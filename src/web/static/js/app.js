@@ -1,15 +1,15 @@
 (function () {
 
 	var $document = $(document);
-	
+
+	var timer;	
 	var $list = $('#list');
-	var $suggestions = $list.find('li');
-	var timer;
+	var $suggestions;
 	var sugLength = 0;
 	var sugActive = -1;
 
 	var $input = $('#input');
-	var country;
+	var country = '';
 
 	var $date = $('#date');
 	var $month = $('#month');
@@ -27,11 +27,10 @@
 	$month.val(mm);
 	$year.val(yyyy);
 
-	// Down key.
+	// Autosuggestions select.
 	$document.keydown(function (e) {
 
 		if ($input.is(':focus')) {
-
 			// Checking for dufferent keys.			
 			if (e.keyCode == 40 && (sugActive + 1) < sugLength) {
 				
@@ -48,13 +47,12 @@
 		    } else if (e.keyCode == 13 ) {
 	    	
 	    		if (sugActive > -1) {
-		    		alert($suggestions.eq(sugActive).data('placeid') + ' ');
+		    		console.log($suggestions.eq(sugActive).data('placeid') + ' ');
 		    	}
 
 		    	return false;
 
 		    } // if (e.keyCode)
-
 		} // if ($input.is)
 
 	}); // $docuemnt.keydown()
@@ -63,15 +61,11 @@
 	// On changing values.
 	$input.on('input', function () {
 
-		if ($input.val().trim()) {
-
+		if (country = $input.val().trim()) {
 			clearTimeout(timer);
-			timer = setTimeout(suggest, 400);
-
+			timer = setTimeout(suggest(country), 400);
 		} else {
-
 			$list.html('');
-
 		}
 
 	});
@@ -120,47 +114,34 @@
 		}
 	});
 
-	function suggest() {
-		$.getJSON('/api/country', {c: $input.val().trim() }, function (data) {
-
-			var c = data.c;			
-			var sug = data.result.Places;
-
-			//$input.val(sug[0].PlaceName);
-			//console.log(c);
-
-			sugLength = sug.length;
-			if (sugLength > 8) sugLength = 5;
-			console.log(sugLength);
+	function suggest(country) {
+		$.getJSON('/api/country', {c: country }, function (data) {
 
 			$list.html('');
+
+			var sug = data.result;
+			sugLength = sug.length;
+			if (sugLength > 8) sugLength = 8;
+
+			var c = data.c;			
 			var i = 0;
 
 			for (i; i < sugLength; i++) {
-
-				var name = sug[i].PlaceName;
-				var placeId = sug[i].PlaceId;
-				placeId = sug[i].PlaceId = placeId.replace('-sky', '');
+				var placeName = sug[i].PlaceName;
+				var placeId = sug[i].PlaceId.replace('-sky', '');
 				
-				$list.append('<li class="sug-list-item" data-placeid="' + placeId + '">' + sug[i].PlaceName + ', ' + placeId + '</li>');
-			
+				$list.append('<li class="sug-list-item" data-placeid="' + placeId + '">' + placeName + ', ' + placeId + '</li>');			
 			}
+
+			/** Attach new events */
 
 			$suggestions = $list.find('li');
 
 			$suggestions.on('click', function () {
-
-				console.log('clicked');
-
-				var $self = $(this);
-
 				$suggestions.removeClass('active');
+				var $self = $(this);
 				$self.addClass('active');
-
 				sugActive = $self.index();
-				
-				alert($self.data('placeid'));
-
 			});
 		
 		});
