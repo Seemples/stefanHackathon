@@ -46,11 +46,12 @@ def country():
 
     headers = {'content-type': 'application/json'}
     r = requests.get(url, headers=headers)
+    js = r.json()
 
-    print json.dumps(r.json(), separators=(',',':'), indent=4, sort_keys=True)
+    print json.dumps(js, separators=(',',':'), indent=4, sort_keys=True)
 
     # Return a JSON object with the API results
-    return jsonify(result=r.json(),c=c)
+    return jsonify(result=js['Places'],c=c)
 
 @app.route('/apitest')
 def apitest():
