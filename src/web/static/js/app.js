@@ -1,15 +1,20 @@
 (function () {
 
+	function isInt(n) {
+		return n % 1 === 0;
+	}
+
 	// Cache the document jQuery object.
 	var $document = $(document);
 
 	// Timer for preventing AJAX Spam.
 	var timer;
 
-
+	// Caching the suggestion variables.
 	var $list = $('#list');
 	var $suggestions;
 	var sugActive = -1;
+
 
 	var $input = $('#input');
 	var country = '';
@@ -100,10 +105,6 @@
 	//                   DATES                          //
 	//////////////////////////////////////////////////////
 
-	var date;
-	var month;
-	var year;
-
 	var $date = $('#date');
 	var $month = $('#month');
 	var $year = $('#year');
@@ -114,51 +115,82 @@
 	$year.val(today.getFullYear());
 
 
-	$('#year').on('input', function () {
+	$year.on('blur', function () {
+		var $self = $(this);		
+		value = $self.val();
 
-		var $self = $(this);
-		year = $self.val();
+		if (value > 2014) value = 2014;
+		else if (value < 2013) value = 2013;
+		$self.val(value);
+	});
 
-		if (year > 2014) {			
-			year = 2014;
-			$self.val(year);
-		} else if (year < 2013) {
-			year = 2013;
-			$self.val(year);			
-		}
+	$date.on('blur', function () {
+		var $self = $(this);		
+		value = $self.val();
+
+		if (value > 31) value = 31;
+		else if (value < 0) value = 1;
+		$self.val(value);
+	});
+
+	$month.on('blur', function () {
+		var $self = $(this);		
+		value = $self.val();
+
+		if (value > 12) value = 12;
+		else if (value < 0) value = 1;
+		$self.val(value);
 	});
 
 
+	//////////////////////////////////////////////////////
+	//                   BUDGET                         //
+	//////////////////////////////////////////////////////
 
-	// Datepicker.
+	var $budget = $('#budget');
 
-	$('#date').on('input', function () {
+	$budget.on('blur', function () {
+		var $self = $(this);		
+		value = $self.val();
 
-		var $self = $(this);
-		date = $self.val();
-
-		if (date > 31) {			
-			date = 31;
-			$self.val(date);
-		} else if (date < 0) {
-			date = 1;
-			$self.val(date);
-		}
+		if (value > 50000) value = 50000;
+		else if (value < 50) value = 50;
+		$self.val(value);
 	});
 
-	$('#month').on('input', function () {
 
-		var $self = $(this);
-		month = $self.val();
+	//////////////////////////////////////////////////////
+	//                   SUBMIT                         //
+	//////////////////////////////////////////////////////
 
-		if (month > 12) {			
-			month = 12;
-			$self.val(month);
-		} else if (month < 0) {
-			month = 1;
-			$self.val(month);			
+	var $submit = $('#submit');
+
+	$submit.click(function () {
+
+
+		var budget = $budget.val().trim();
+
+		var date = $date.val().trim();
+		var month = $month.val().trim();
+		var year = $year.val().trim();
+
+		if (!isInt(budget) || !isInt(date) || !isInt(month) || !isInt(year)) {
+			alert('Incorrect values entered!');
+			return;
 		}
-	});
 
+		if (date && date < 10) date = '0' + date;
+		if (month && month < 10) month = '0' + month;
+
+		if (!year || !month || !date || !budget || !country) {
+			alert('All fiels should be filled.');
+			return;
+		}
+
+		year += '-' + month + '-' + date;
+
+		console.log(year);
+
+	});
 
 })($);

@@ -10,6 +10,10 @@ key = 'hck01722056005870195080684980065'
 def hello():
     return render_template('index.html')
 
+@app.route('/gallery')
+def gallery():
+    return render_template('gallery.html')
+
 @app.route('/api/country')
 def country():
 
@@ -53,7 +57,7 @@ def country():
     # Return a JSON object with the API results
     return jsonify(result=js['Places'],c=c)
 
-@app.route('/apitest')
+@app.route('/api/test')
 def apitest():
     url = 'http://partners.api.skyscanner.net/apiservices/browseroutes/v1.0'
 
@@ -75,7 +79,7 @@ def apitest():
 
     # Destination
     url += '/'
-    url += 'BG'
+    url += 'anywhere'
 
     # Outbound date
     url += '/'
@@ -93,17 +97,27 @@ def apitest():
     headers = {'content-type': 'application/json'}
     r = requests.get(url, headers = headers)
 
-    #print json.dumps(r.json(), separators=(',',':'), indent=4, sort_keys=True)
-    #return json.dumps(r.json())
+    js = r.json()
 
-    json = r.json()
+    print json.dumps(js, separators=(',',':'), indent=4, sort_keys=True)
 
+    Routes = js['Routes']
+    Places = js['Places']
+
+    for Route in Routes:
+        pid = Route['DestinationId']
+        for Place in Places:
+            if pid == Place['PlaceId']:
+                Route['DestinationId'] = Place['Name']
+
+    #print json.dumps(Routes, separators=(',',':'), indent=4, sort_keys=True)
+
+    return json.dumps(Routes)
+ 
     #print json['Routes']
 
-    for Route in json['Routes']:
-        if 'Price' in Route: print Route
-
-    return 'ads'
+    #for Route in json['Routes']:
+    #    if 'Price' in Route: print Route
 
 app.debug = True
 
