@@ -3,6 +3,7 @@ import json
 
 print "Requesting info about flights from GLA to NRT..."
 r = requests.get("http://partners.api.skyscanner.net/apiservices/browsequotes/v1.0/GB/GBP/en-GB/UK/anywhere/anytime/anytime?apiKey=prtl6749387986743898559646983194")
+#r = requests.get("http://partners.api.skyscanner.net/apiservices/pricing/v1.0/69ce9038cc1e466c96f9e285474e2fe7_elhhpiln_3C0363B7FADA78837F0778C16D08B242?apikey=hck01722056005870195080684980065")
 print "Returned json!"
 print
 print r.json()
