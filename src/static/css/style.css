@@ -145,7 +145,7 @@ body {
 /** Gallery **/
 
 .gallery-container {
-	display: block;
+	display: none;
 	list-style: none;
 	width: 100%;
 	height: 100%;
@@ -190,4 +190,13 @@ body {
 }
 .gallery-image.active {
 	display: block;
+}
+
+/** Hops **/
+
+.hop-container {
+	display: none;
+	width: 100%;
+	height: 100%;
+	list-style: none;
 }

@@ -15,6 +15,8 @@
 	var $suggestions;
 	var sugActive = -1;
 
+	var d;
+	var budget;
 
 	var $input = $('#input');
 	var country = '';
@@ -168,7 +170,7 @@
 	$submit.click(function () {
 
 
-		var budget = $budget.val().trim();
+		budget = $budget.val().trim();
 
 		var date = $date.val().trim();
 		var month = $month.val().trim();
@@ -189,8 +191,85 @@
 
 		year += '-' + month + '-' + date;
 
-		console.log(year);
+		d = year;
 
+		gal();
 	});
+
+
+	//////////////////////////////////////////////////////
+	//                   SUBMIT                         //
+	//////////////////////////////////////////////////////
+
+	var hops = [];
+	var $gallery = $('#gallery');
+
+	function gal () {
+
+		console.log(country + ' ' + d + ' ' + budget);
+
+		$('#start').css({display: 'none'});
+		$('#gallery').css({display: 'block'});
+
+		$.getJSON('http://localhost:5000/api/atw', {c: country, date: d, budget: budget}, function (data) {			
+
+			hops = data;
+
+			var id = 0;
+
+			data.forEach(function (entry) {
+
+				console.log(entry);
+				var city = entry.DestName;
+
+				var template =
+				   	'<li class="gallery-item" data-city="' + city + '">' +
+				   	'<div class="gallery-block gallery-id">' + (++id) + '</div>' +
+				   	'<div class="gallery-block gallery-name">' + city + '</div>';
+				    
+				template += '</li>';
+				$(template).click(function () { alert('Disco!'); });
+				$gallery.append(template);
+			});
+
+			var $li = $gallery.find('li');
+			//$li.click(function () { show($(this).index()) });
+			
+			/*$li.each(function () {
+				var $img = $(this).find('img');
+				$.getJSON('http://localhost:5000/api/wiki', {city: $(this).data('city')}, function (data) {
+					for (var i = 0; i < 3; i++) if (data[i]) { $img.eq(i).css({display: 'block'}); }
+				});
+			});*/
+
+		});
+
+	}
+
+
+
+
+
+	function show(id) {
+
+		hop = hops[id];
+
+		var city = hop.DestinationId;
+
+		var template =
+			'<h2 id="hophead" class="hop-header" data-city="' + city + '">' + city + '</h2>' +
+			'<div id="venues" class="hop-venues"></div>';
+
+		$('#hop').append(template);
+
+		$.getJSON('http://localhost:5000/api/venues', {city: city}, function (dta) {
+
+			data.each(function (entry) {
+				console.log(entry);
+			});
+
+		});
+
+	}
 
 })($);

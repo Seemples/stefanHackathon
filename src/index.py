@@ -4,6 +4,8 @@ from flask import Flask, jsonify, request, render_template
 import socket
 from urllib2 import urlopen
 import urllib2
+from random import randint
+import atw
 
 def keyword(variable, page):
     matches = page.count(variable)
@@ -21,9 +23,34 @@ key = 'hck01722056005870195080684980065'
 def hello():
     return render_template('index.html')
 
-@app.route('/gallery')
-def gallery():
-    return render_template('gallery.html')
+
+@app.route('/api/atw')
+def whoho():
+    c = request.args.get('c', '', type=str)
+    budget = request.args.get('budget', 50, type=int)
+    date = request.args.get('date', '2013-11-04', type=str)
+
+    r = atw.start(c, budget, date, 2)
+    #print json.dumps(r, separators=(',',':'), indent=4, sort_keys=True)
+
+    print 'THIS IS A NASKO OUTPUT'
+    print r
+
+    return json.dumps(r)
+
+@app.route('/api/venues')
+def venues():
+    city = request.args.get('city', '', type=str)
+    venues = requests.get('http://api.event.ly/v3/venues/search.json?city=' + city + '&api_key=8145e1ce63396b62')
+    venues = venues.json()
+    i = 0
+    v = []
+    while i < 3:
+        artist = randint(0, 99)
+        v.append(venues[artist]['name'])
+        i += 1
+
+    return v.json()
 
 @app.route('/api/wiki')
 def wiki():
