@@ -237,7 +237,7 @@
 			});
 
 			var $li = $gallery.find('li');
-			$li.click(function () { $self = $(this); alert('Disco!'); show($self); });
+			$li.click(function () { $self = $(this); show($self); });
 			
 			/*$li.each(function () {
 				var $img = $(this).find('img');
@@ -251,21 +251,17 @@
 	}
 
 
-
-
-
 	function show($obj) {
 
 		var id = $obj.index();
 		hop = hops[id];
 		var city = hop.DestName;
 
-		var template = '';
-
 		//$('#hop').append(template);
 
 		$.getJSON('http://localhost:5000/api/venues', {city: "London"}, function (pd) {
 
+			var template = '';
 			console.log(pd);
 
 			template += '<div id="venues" class="hop-venues">';
@@ -273,7 +269,7 @@
 			if (pd == 'error') template += 'No venues found.';
 			else {
 				pd.forEach(function (en) {
-					template += '<span classs="venue-item">' + en + " "+ '</span>';			
+					template += '<span classs="venue-item">' + en + ' - </span>';			
 				});
 			}
 
@@ -282,6 +278,22 @@
 			$obj.append(template);
 
 		});
+
+		/*$.getJSON('http://localhost:5000/api/weather', {city: city}, function (wd) {
+
+			var template = '';
+			console.log(wd);
+
+			template += '<div id="weather" class="hop-weather">';
+			wd.forEach(function (enx) {
+				template += '<span classs="venue-item">' + enx + ' </span>';			
+			});
+
+			template += '</div>';
+
+			$obj.append(template);
+
+		});*/
 
 	}
 

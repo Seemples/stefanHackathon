@@ -5,6 +5,7 @@ import socket
 from urllib2 import urlopen
 import urllib2
 from random import randint
+from json import load
 import atw
 
 def keyword(variable, page):
@@ -37,6 +38,21 @@ def whoho():
     print r
 
     return json.dumps(r)
+
+@app.route('/api/weather')
+def weather():
+    city = request.args.get('city', '', type=str)
+    city = city.replace(' ', '_')
+
+    data = urlopen('http://openweathermap.org/data/2.1/find/name?q='+city)
+    cities = load(data)
+    if cities['count'] > 0:
+        city = cities['list'][0]
+        temp = city['main']['temp']
+        temp = str(round(temp - 273.15))
+        weather=city['weather'][0]['main'] 
+        w = {'temp': temp, 'weather': weather}
+        return json.dumps(w)
 
 @app.route('/api/venues')
 def venues():
