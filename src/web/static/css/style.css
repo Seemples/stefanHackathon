@@ -10,7 +10,6 @@ body {
 	margin: 0;
 	font-family: 'Open Sans', sans-serif;
 	font-weight: 300;
-	overflow: hidden;
 }
 
 .left {
@@ -140,4 +139,55 @@ body {
 	background: #008DDE;
 	border-radius: 3px;
 	cursor: pointer;
+}
+
+
+/** Gallery **/
+
+.gallery-container {
+	display: block;
+	list-style: none;
+	width: 100%;
+	height: 100%;
+}
+
+.gallery-item {
+	display: block;
+	width: 100%;
+	height: 80px;
+	border-bottom: 1px solid #cfcfcf;
+}
+.gallery-block {
+	display: block;
+	float: left;
+	width: 25%;
+	height: 80px;
+	padding: 24px 0px 0;
+	text-align: center;
+}
+.gllaery-item:after {
+	content: '';
+	display: table;
+	clear: both;
+}
+.gallery-id {
+	width: 3%;
+}
+.gallery-name {
+	width: 22%;
+}
+.gallery-wiki {
+	width: 20%;
+	padding: 0;
+	text-align: center;
+}
+.gallery-image {
+	max-width: 33%;
+	height: 100%; 
+	display: inline-block;
+	margin-left: -3px;
+	display: none;
+}
+.gallery-image.active {
+	display: block;
 }

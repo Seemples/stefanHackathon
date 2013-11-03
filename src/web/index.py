@@ -2,6 +2,17 @@ import requests
 import json
 from flask import Flask, jsonify, request, render_template
 import socket
+from urllib2 import urlopen
+import urllib2
+
+def keyword(variable, page):
+    matches = page.count(variable)
+    if matches > 10:
+        return True
+    else:
+        return False
+
+city="Glasgow" #we need to be careful about the wiki url
 
 app = Flask(__name__)
 key = 'hck01722056005870195080684980065'
@@ -13,6 +24,22 @@ def hello():
 @app.route('/gallery')
 def gallery():
     return render_template('gallery.html')
+
+@app.route('/api/wiki')
+def wiki():
+    city = request.args.get('city', '', type=str)
+    city = city.replace(' ', '_')
+
+    headers = {"User-Agent":"Mozilla/5.0 (X11; U; Linux i686) Gecko/20071127 Firefox/2.0.0.11"} # Bypasses the bot-block from the site
+    req = urllib2.Request("http://en.wikipedia.org/wiki/" + city, headers=headers)
+    page = urllib2.urlopen(req).read()   #reades the whole webpage including the html
+    
+    keywords = ['beach', 'mountain', 'island']
+    matches = []
+    for i in keywords:
+        matches.append(keyword(i, page))
+
+    return json.dumps(matches)
 
 @app.route('/api/country')
 def country():
@@ -104,15 +131,21 @@ def apitest():
     Routes = js['Routes']
     Places = js['Places']
 
+    i = 0
+    d = []
+
     for Route in Routes:
         pid = Route['DestinationId']
         for Place in Places:
             if pid == Place['PlaceId']:
                 Route['DestinationId'] = Place['Name']
+                if i < 10:
+                    d.append(Route)
+                    i += 1
 
     #print json.dumps(Routes, separators=(',',':'), indent=4, sort_keys=True)
 
-    return json.dumps(Routes)
+    return json.dumps(d)
  
     #print json['Routes']
 
