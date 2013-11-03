@@ -260,17 +260,26 @@
 		hop = hops[id];
 		var city = hop.DestName;
 
-		var template =
-			'<h2 id="hophead" class="hop-header" data-city="' + city + '">' + city + '</h2>' +
-			'<div id="venues" class="hop-venues"></div>';
+		var template = '';
 
 		//$('#hop').append(template);
 
-		$.getJSON('http://localhost:5000/api/venues', {city: city}, function (dta) {
+		$.getJSON('http://localhost:5000/api/venues', {city: "London"}, function (pd) {
 
-			data.each(function (entry) {
-				console.log(entry);
-			});
+			console.log(pd);
+
+			template += '<div id="venues" class="hop-venues">';
+
+			if (pd == 'error') template += 'No venues found.';
+			else {
+				pd.forEach(function (en) {
+					template += '<span classs="venue-item">' + en + " "+ '</span>';			
+				});
+			}
+
+			template += '</div>';
+
+			$obj.append(template);
 
 		});
 

@@ -42,18 +42,20 @@ def whoho():
 def venues():
     city = request.args.get('city', '', type=str)
     city = city.replace(' ', '_')
-    venues = requests.get('http://api.event.ly/v3/venues/search.json?city=' + city + '&api_key=8145e1ce63396b62')
-    venues = venues.json()
-    i = 0
-    v = []
-    while i < 2:
-        artist = randint(0, len(venues))
+    events=requests.get('http://api.event.ly/v3/venues/search.json?city='+city+'&api_key=8145e1ce63396b62')
+    events=events.json()
+    i=0
+    b=[]
+    venues=[]
+    while i<3:
         try:
-            v.append(venues[artist]['name'])
-            i += 1
+            artist=randint(0,len(events))
+            b=events[artist]['name']
+            i+=1
+            venues+=[b]
         except:
-            return []
-    return v.json()
+            return 'error'
+    return json.dumps(venues)
 
 @app.route('/api/wiki')
 def wiki():
