@@ -20,11 +20,11 @@ date	string YYYY-MM-DD
 
 
 
-	getCountryId(PladeCode)
+	toPlaceString(iata)
 
-PlaceCode is str IataCode
+iata is str IataCode
 
-returns str
+returns city name (str)
 
 
 
