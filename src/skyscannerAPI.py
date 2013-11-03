@@ -19,7 +19,8 @@ def browse(dep,arr,date1,date2):
     output = browseRequest(dep,arr,interval[0])
     for day in interval[1:]:
         r = browseRequest(dep,arr,day)
-        output["Quotes"] = r["Quotes"] + output["Quotes"]
+        if output.get("Quotes") != None:
+            output["Quotes"] = r["Quotes"] + output["Quotes"]
 
     return browseFormat(output)
 
@@ -96,14 +97,17 @@ def days(date1,date2):
 
 
 def browseFormat(dic):
-    output = [] + (dic.get("Quotes"))
+    if dic.get("Quotes") == None:
+        return []
+    output = dic["Quotes"]
+    
     for flight in output:
-        flight.pop("QuoteId", None)
+        #flight.pop("QuoteId", None)
         for dest in dic["Places"]:
             if dest["PlaceId"] == flight["OutboundLeg"]["DestinationId"]:
                 flight["DestName"] = dest["Name"]
                 flight["DestCode"] = dest["IataCode"]
-                flight["DestCountry"] = getCountryId(dest["IataCode"])
+                flight["DestCountry"] = "" #getCountryId(dest["IataCode"])
 
         flight["CarrierName"] = []
         for carrier in dic["Carriers"]:
