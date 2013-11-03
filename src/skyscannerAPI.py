@@ -2,7 +2,7 @@ import requests
 import json
 from datetime import date, timedelta
 
-
+#toPlaceString(iata)    str iata -> str city
 #Use browse(dep,arr,date1,date2)    -->     returns list of dicts
 
 #noRepeatedCountries(depPlaceCode, browseOutputList)    --> list with flights
@@ -19,7 +19,7 @@ def browse(dep,arr,date1,date2):
     output = browseRequest(dep,arr,interval[0])
     for day in interval[1:]:
         r = browseRequest(dep,arr,day)
-        if output.get("Quotes") != None:
+        if (output.get("Quotes") != None) and (r.get("Quotes") != None):
             output["Quotes"] = r["Quotes"] + output["Quotes"]
 
     return browseFormat(output)
@@ -117,11 +117,19 @@ def browseFormat(dic):
     return output
 
 
-def getCountryId(PlaceCode):
-    part1 = "http://partners.api.skyscanner.net/apiservices/autosuggest/v1.0/UK/GBP/en-GB/?id="
-    part2 = "&apikey=hck01722056005870195080684980065"
-    r = requests.get(part1 + PlaceCode + part2)
-    return r.json()["Places"][0]["CountryId"][:-4]
+
+def toPlaceString(iata):
+    f = open("workIata.txt", "r")
+    s = str(f.read())
+    f.close()
+    slist = s.split('\n')
+
+    out = ""
+    for line in slist:
+        
+        temp = line.split()
+        if iata == temp[-1]:
+            return temp[0]
 
 
 
