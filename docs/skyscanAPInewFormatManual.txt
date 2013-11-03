@@ -20,11 +20,11 @@ date	string YYYY-MM-DD
 
 
 
-	noRepeatedCountries(depPlaceCode, browseOutputList)
+	getCountryId(PladeCode)
 
-depPlaceCode is str IataCode
+PlaceCode is str IataCode
 
-returns list with flights to other countries
+returns str
 
 
 
