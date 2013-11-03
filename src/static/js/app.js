@@ -211,7 +211,9 @@
 		$('#start').css({display: 'none'});
 		$('#gallery').css({display: 'block'});
 
-		$.getJSON('http://localhost:5000/api/atw', {c: country, date: d, budget: budget}, function (data) {			
+		$.getJSON('http://localhost:5000/api/atw', {c: country, date: d, budget: budget}, function (data) {
+
+			$('#gallery').html('');	
 
 			hops = data;
 
@@ -221,19 +223,21 @@
 
 				console.log(entry);
 				var city = entry.DestName;
+				budget -= entry.MinPrice;
 
 				var template =
 				   	'<li class="gallery-item" data-city="' + city + '">' +
 				   	'<div class="gallery-block gallery-id">' + (++id) + '</div>' +
-				   	'<div class="gallery-block gallery-name">' + city + '</div>';
+				   	'<div class="gallery-block gallery-name">' + city + '</div>' +
+				   	'<div class="gallery-block gallery-price"><strong>Price:</strong> ' + entry.MinPrice + '</div>' +
+				   	'<div class="gallery-block gallery-budget"><strong>Current Budget:</strong> ' + budget + '</div>';
 				    
 				template += '</li>';
-				$(template).click(function () { alert('Disco!'); });
 				$gallery.append(template);
 			});
 
 			var $li = $gallery.find('li');
-			//$li.click(function () { show($(this).index()) });
+			$li.click(function () { $self = $(this); alert('Disco!'); show($self); });
 			
 			/*$li.each(function () {
 				var $img = $(this).find('img');
@@ -250,17 +254,17 @@
 
 
 
-	function show(id) {
+	function show($obj) {
 
+		var id = $obj.index();
 		hop = hops[id];
-
-		var city = hop.DestinationId;
+		var city = hop.DestName;
 
 		var template =
 			'<h2 id="hophead" class="hop-header" data-city="' + city + '">' + city + '</h2>' +
 			'<div id="venues" class="hop-venues"></div>';
 
-		$('#hop').append(template);
+		//$('#hop').append(template);
 
 		$.getJSON('http://localhost:5000/api/venues', {city: city}, function (dta) {
 

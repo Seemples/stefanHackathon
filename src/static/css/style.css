@@ -175,6 +175,7 @@ body {
 }
 .gallery-name {
 	width: 22%;
+	text-align: left;
 }
 .gallery-wiki {
 	width: 20%;
