@@ -131,6 +131,17 @@ def toPlaceString(iata):
         if iata == temp[-1]:
             return temp[0]
 
+def getCountryId(iata):
+    f = open("workIata.txt", "r")
+    s = str(f.read())
+    f.close()
+    slist = s.split('\n')
+
+    for line in slist:
+        temp = line.split()
+        if iata == temp[-1]:
+            return temp[-2]
+
 
 
 
