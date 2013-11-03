@@ -3,7 +3,7 @@ import json
 from datetime import date, timedelta
 
 
-#Use browse(dep,arr,date1,date2)    -->     returns json
+#Use browse(dep,arr,date1,date2)    -->     returns list of dicts
 #and livePricing(dep, arr, date)    -->     returns dict
 
 
@@ -17,7 +17,7 @@ def browse(dep,arr,date1,date2):
         r = browseRequest(dep,arr,day)
         output["Quotes"] = r["Quotes"] + output["Quotes"]
 
-    return output
+    return browseFormat(output)
 
 
 def livePricing(dep, arr, date):        #String date in format YYYY-MM-DD
@@ -77,4 +77,25 @@ def days(date1,date2):
         days += [nextDate]
         
     return days
+
+
+def browseFormat(dic):
+    output = [] + dic["Quotes"]
+    for flight in output:
+        flight.pop("QuoteId", None)
+        for dest in dic["Places"]:
+            if dest["PlaceId"] == flight["OutboundLeg"]["DestinationId"]:
+                flight["DestName"] = dest["Name"]
+                flight["DestCode"] = dest["IataCode"]
+
+        flight["CarrierName"] = []
+        for carrier in dic["Carriers"]:
+            if carrier["CarrierId"] in flight["OutboundLeg"]["CarrierIds"]:
+                flight["CarrierName"] += [carrier["Name"]]
+
+    return output
+
+
+
+
 

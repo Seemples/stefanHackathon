@@ -1,0 +1,39 @@
+	
+	browse(dep,arr,date1,date2)
+
+###takes values:
+
+dep	departure airport, 3-letter String ex. "GLA"
+arr	arrival airport, 3-letter String or "anywhere
+date	string YYYY-MM-DD
+
+###returns list with dicts; keys:
+
+"Direct" (boolean)
+"MinPrice" (float)
+"DestCode" (str)
+"DestName" (str)
+"CarrierName" (list of str)
+
+"OutboundLeg" (dict), which holds: "CarrierIds" (list of int),
+			"DepartureDate" (date), "DestinationId" (int), "OriginId" (int)
+
+
+    livePricing stays as it was:
+
+	livePricing(dep, arr, date)
+
+###takes values:
+
+dep	departure airport, 3-letter String ex. "GLA"
+arr	arrival airport, 3-letter String or "anywhere
+date	string YYYY-MM-DD
+
+###returns dict with items:
+
+'Arrival'	:date
+'Departure'	:date
+'Price'		:float 
+'Carrier'	:string
+'AgentName'	:string
+'AgentLogo'	:string URL to the png file
