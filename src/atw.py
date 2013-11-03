@@ -59,6 +59,7 @@ def chooseCityBasic(route, routeIata, routeCountry, d1, d2, budget, initRand):
         return -1
 
     if countryId != None:
+        print "Could not find countryId"
         routeCountry += countryId
     routeIata += [cheapest.get("DestCode")]
     route += [cheapest]
@@ -69,24 +70,40 @@ def goHome(route, budget, duration):
     for i in route:
         print i
     print "----"
+    if len(route) == 0:
+        return -1
+    rd = route[-1]["OutboundLeg"]["DepartureDate"]
+    dtrd = dateutil.parser.parse(rd)
+    dtrd += datetime.timedelta(days=duration)
+    dtrd2 = dtrd + datetime.timedelta(days=duration)
+    srd = dtrd.strftime("%Y-%m-%d")
+    srd2 = dtrd2.strftime("%Y-%m-%d")
     while True:
         if len(route) == 0:
             return -1
         # parse date
-        rd = route[-1]["OutboundLeg"]["DepartureDate"]
-        dtrd = dateutil.parser.parse(rd)    # Should encapsulate this shiz or something
-        dtrd += datetime.timedelta(days=duration)
-        srd = dtrd.strftime("%Y-%m-%d")
-        flightHome = skyscannerAPI.browse(route[-1]["DestCode"], route[0]["DestCode"], srd, srd)
+       # rd = route[-1]["OutboundLeg"]["DepartureDate"]
+       # dtrd = dateutil.parser.parse(rd)    # Should encapsulate this shiz or something
+       # dtrd += datetime.timedelta(days=duration)
+       # srd = dtrd.strftime("%Y-%m-%d")
+        flightHome = skyscannerAPI.browse(route[-1]["DestCode"], route[0]["DestCode"], srd, srd2)
         # There should be only one flight home
-        if len(flightHome) != 0 and flightHome[0]["MinPrice"] < budget:
-            route += [flightHome[0]]
-            return 0
+        cheapest = None 
+        if len(flightHome) != 0:
+            cheapest = flightHome[0]
+            for i in flightHome:
+                if i["MinPrice"] < cheapest["MinPrice"]:
+                    cheapest = i
+            if cheapest["MinPrice"] < budget:
+                route += [cheapest]
+                return 0
         budget += route[-1]["MinPrice"]
         rd = route[-1]["OutboundLeg"]["DepartureDate"]
         dtrd = dateutil.parser.parse(rd)
-        dtrd += datetime.timedelta(days=duration)
+        dtrd -= datetime.timedelta(days=duration)
+        dtrd2 -= datetime.timedelta(days=duration)
         srd = dtrd.strftime("%Y-%m-%d")
+        srd2 = dtrd.strftime("%Y-%m-%d")
         route.pop()
         print "popping <(^.^)>"
     return -1
@@ -105,7 +122,7 @@ def aroundTheWorld(startingCity, budget, startingDate, duration, ran):
     routeCountry = [skyscannerAPI.getCountryId(startingCity)]
     while True:
         i = None
-        if ran == 5:
+        if ran == 4:
             i = chooseCityBasic(route, routeIata, routeCountry, ssd, ssd, budget, False)
         else:
             i = chooseCityBasic(route, routeIata, routeCountry, ssd, ssd, budget, True)
@@ -120,12 +137,12 @@ def aroundTheWorld(startingCity, budget, startingDate, duration, ran):
         if ran == 5:
             print "I CANNAE FIND A ROUTE CAPTIN"
             return route
-        print "Retrying, hoping for better starting rand city"
+        print "Retrying, friggin' RNG, hope for better starting rand city"
         aroundTheWorld(startingCity, initBudget, startingDate, duration, ran+1)
     return route
 
 def start(startingCity, budget, startingDate, duration):
     return aroundTheWorld(startingCity, budget, startingDate, duration, 0)
 
-# print start("GLA", 100, "2013-11-09", 2)
+#print start("GLA", 1000, "2013-11-09", 2)
 #aroundTheWorld("GLA", 100, "2013-11-09", 2, 0)
