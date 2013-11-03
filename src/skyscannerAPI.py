@@ -4,6 +4,10 @@ from datetime import date, timedelta
 
 
 #Use browse(dep,arr,date1,date2)    -->     returns list of dicts
+
+#noRepeatedCountries(depPlaceCode, browseOutputList)    --> list with flights
+                                                        #to other countries
+
 #and livePricing(dep, arr, date)    -->     returns dict
 
 
@@ -18,6 +22,18 @@ def browse(dep,arr,date1,date2):
         output["Quotes"] = r["Quotes"] + output["Quotes"]
 
     return browseFormat(output)
+
+
+def noRepeatedCountries(depPlaceCode, browseOutputList):
+    depCountryId = getCountryId(depPlaceCode)
+
+    i=0
+    while i < len(browseOutputList):
+        if browseOutputList[i]["DestCountry"] == depCountryId:
+            del browseOutputList[i]
+        i += 1
+
+    return browseOutputList
 
 
 def livePricing(dep, arr, date):        #String date in format YYYY-MM-DD
@@ -80,13 +96,14 @@ def days(date1,date2):
 
 
 def browseFormat(dic):
-    output = [] + dic["Quotes"]
+    output = [] + (dic.get("Quotes"))
     for flight in output:
         flight.pop("QuoteId", None)
         for dest in dic["Places"]:
             if dest["PlaceId"] == flight["OutboundLeg"]["DestinationId"]:
                 flight["DestName"] = dest["Name"]
                 flight["DestCode"] = dest["IataCode"]
+                flight["DestCountry"] = getCountryId(dest["IataCode"])
 
         flight["CarrierName"] = []
         for carrier in dic["Carriers"]:
@@ -95,6 +112,12 @@ def browseFormat(dic):
 
     return output
 
+
+def getCountryId(PlaceCode):
+    part1 = "http://partners.api.skyscanner.net/apiservices/autosuggest/v1.0/UK/GBP/en-GB/?id="
+    part2 = "&apikey=hck01722056005870195080684980065"
+    r = requests.get(part1 + PlaceCode + part2)
+    return r.json()["Places"][0]["CountryId"][:-4]
 
 
 

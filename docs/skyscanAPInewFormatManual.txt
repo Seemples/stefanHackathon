@@ -1,5 +1,5 @@
 	
-	browse(dep,arr,date1,date2)
+	browse(dep,arr,date1,date2)	#if no flights returns empty list
 
 ###takes values:
 
@@ -17,6 +17,15 @@ date	string YYYY-MM-DD
 
 "OutboundLeg" (dict), which holds: "CarrierIds" (list of int),
 			"DepartureDate" (date), "DestinationId" (int), "OriginId" (int)
+
+
+
+	noRepeatedCountries(depPlaceCode, browseOutputList)
+
+depPlaceCode is str IataCode
+
+returns list with flights to other countries
+
 
 
     livePricing stays as it was:
